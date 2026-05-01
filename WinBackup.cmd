@@ -61,7 +61,7 @@ set "ROBO_OPT=/E /ZB /R:2 /W:2 /XJ /COPY:DAT /DCOPY:DAT /FFT"
 set "EXCLUDE_PROFILES=All Users Default Default User Public defaultuser0 default"
 
 :: Étapes
-set "NB_ETAPES=12"
+set "NB_ETAPES=13"
 
 set "ETAPE_NOM[1]=Bureau"
 set "ETAPE_CLE[1]=DESKTOP"
@@ -98,6 +98,9 @@ set "ETAPE_CLE[11]=BROWSERS"
 
 set "ETAPE_NOM[12]=OneNote, Pense-bêtes et fichiers PST"
 set "ETAPE_CLE[12]=NOTES_PST"
+
+set "ETAPE_NOM[13]=Applications installées (export de la liste)"
+set "ETAPE_CLE[13]=APPLICATIONS"
 
 :: Menu
 :MENU
@@ -350,8 +353,8 @@ for /L %%I in (1,1,%NB_ETAPES%) do (
 
 call :AfficherMsg "Attention - fermeture obligatoire" "Avant de lancer la sauvegarde, tout doit être fermé sauf ce script. Fermez absolument toutes les applications, toutes les fenêtres, tous les logiciels en arrière-plan, et vérifiez aussi dans la barre des tâches ainsi que dans la zone de notification, la petite flèche vers le haut, qu'il ne reste rien d'ouvert. Faites clic droit puis Quitter sur tout ce qui peut l'être. Ne rouvrez rien pendant toute la durée de la sauvegarde." 48
 
-:: Total = étapes cochées + export applications + finalisation
-set /a TOTAL_DYN=NB_SELECTIONNES+2
+:: Total = étapes cochées + finalisation
+set /a TOTAL_DYN=NB_SELECTIONNES+1
 call :INIT_PROGRESSION %TOTAL_DYN%
 call :FAIRE_SAUVEGARDE
 
@@ -457,13 +460,16 @@ if "%ETAPE_OK%"=="1" (
     )
 )
 
-call :AFFICHER_PROGRESSION "Export de la liste des applications installées"
-set "_APPS_FILE=%DOSSIER_SAUVEGARDE%\applications_installees.txt"
-where winget >nul 2>&1
-if not errorlevel 1 (
-    powershell -NoProfile -Command "$f=$env:_APPS_FILE; $s=winget list --accept-source-agreements 2>$null; if($s -and $s.Count -gt 2){$h=$s[0..1]; $c=$s[2..($s.Count-1)]|Where-Object{$_ -match '\S'}|Sort-Object; ($h+$c)|Out-File -FilePath $f -Encoding UTF8}" >nul 2>&1
-) else (
-    powershell -NoProfile -Command "$f=$env:_APPS_FILE; $p='HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*','HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'; Get-ItemProperty $p | Where-Object{$_.DisplayName} | Select-Object DisplayName,DisplayVersion,Publisher | Sort-Object DisplayName | Format-Table -AutoSize | Out-String | Out-File -FilePath $f -Encoding UTF8" >nul 2>&1
+call :EST_COCHE APPLICATIONS
+if "%ETAPE_OK%"=="1" (
+    call :AFFICHER_PROGRESSION "Export de la liste des applications installées"
+    set "_APPS_FILE=%DOSSIER_SAUVEGARDE%\applications_installees.txt"
+    where winget >nul 2>&1
+    if not errorlevel 1 (
+        powershell -NoProfile -Command "$f=$env:_APPS_FILE; $s=winget list --accept-source-agreements 2>$null; $clean=$s|Where-Object{$_ -match '\S' -and $_ -notmatch '[█▒]' -and $_ -notmatch '^\s*-+\s*$'}; if($clean -and $clean.Count -gt 1){$h=$clean[0]; $c=$clean[1..($clean.Count-1)]|Sort-Object; (@($h)+$c)|Out-File -FilePath $f -Encoding UTF8}" >nul 2>&1
+    ) else (
+        powershell -NoProfile -Command "$f=$env:_APPS_FILE; $p='HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*','HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'; Get-ItemProperty $p | Where-Object{$_.DisplayName} | Select-Object DisplayName,DisplayVersion,Publisher | Sort-Object DisplayName | Format-Table -AutoSize | Out-String | Out-File -FilePath $f -Encoding UTF8" >nul 2>&1
+    )
 )
 
 call :AFFICHER_PROGRESSION "Finalisation"
@@ -576,11 +582,6 @@ call :INIT_PROGRESSION %TOTAL_DYN%
 call :FAIRE_RESTAURATION "%DOSSIER_RESTAURATION%" "%PROFIL_CIBLE%"
 
 call :AfficherMsg "Restauration terminée" "La restauration est terminée." 64
-
-if exist "%DOSSIER_RESTAURATION%\applications_installees.txt" (
-    call :AfficherMsg "Applications à réinstaller" "La liste des applications installées au moment de la sauvegarde va s'ouvrir. Utilisez-la pour réinstaller vos logiciels manuellement." 64
-    start notepad "%DOSSIER_RESTAURATION%\applications_installees.txt"
-)
 goto MENU
 
 :FAIRE_RESTAURATION
@@ -667,6 +668,15 @@ if "%ETAPE_OK%"=="1" (
     call :COPIER_DOSSIER "%SRC%\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe\LocalState" "%DST%\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe\LocalState"
     call :COPIER_DOSSIER "%SRC%\AppData\Roaming\Microsoft\Sticky Notes" "%DST%\AppData\Roaming\Microsoft\Sticky Notes"
     call :COPIER_DOSSIER "%SRC%\Fichiers_PST" "%DST%"
+)
+
+call :EST_COCHE APPLICATIONS
+if "%ETAPE_OK%"=="1" (
+    call :AFFICHER_PROGRESSION "Affichage des applications à réinstaller"
+    if exist "%SRC%\applications_installees.txt" (
+        call :AfficherMsg "Applications à réinstaller" "La liste des applications installées au moment de la sauvegarde va s'ouvrir. Utilisez-la pour réinstaller vos logiciels manuellement." 64
+        start notepad "%SRC%\applications_installees.txt"
+    )
 )
 
 call :AFFICHER_PROGRESSION "Finalisation"
