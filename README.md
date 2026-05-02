@@ -34,7 +34,7 @@
 * Export de la liste des applications installées (via winget ou le registre) pour faciliter la réinstallation
 * Garde-fou intégré empêchant de sauvegarder à l'intérieur du profil en cours de sauvegarde (évite les boucles infinies)
 * Compteur d'étapes dynamique et pourcentage d'avancement adaptés aux étapes réellement sélectionnées
-* Affichage en temps réel des Mo copiés pendant chaque opération de copie
+* Affichage en temps réel des Go copiés pendant chaque opération de copie
 * Fichier de log détaillé généré pour chaque sauvegarde et restauration
 * Compatible avec les ordinateurs multi-utilisateurs : choisissez quel profil Windows sauvegarder ou restaurer
 
@@ -52,7 +52,7 @@ Une fois lancé :
 
 Fermez toutes les applications, toutes les fenêtres et tous les programmes en arrière-plan avant de lancer le script, y compris dans la zone de notification (la petite flèche vers le haut à côté de l'horloge).
 
-Vous pouvez laisser le script s'exécuter seul : un écran de progression indique quelle étape est en cours, son avancement, ainsi que les Mo copiés en temps réel. Une fenêtre de confirmation vous avertit une fois la tâche terminée.
+Vous pouvez laisser le script s'exécuter seul : un écran de progression indique quelle étape est en cours, son avancement, ainsi que les Go copiés en temps réel. Une fenêtre de confirmation vous avertit une fois la tâche terminée.
 
 Lors d'une restauration, le script lit automatiquement les métadonnées du dossier de sauvegarde et vous avertit si le profil source et le profil cible sont différents.
 
