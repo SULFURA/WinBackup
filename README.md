@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center"><a href="https://github.com/SULFURA/WinBackup/releases/latest" target="_blank">WinBackup</a> est un script Windows gratuit et open source pour sauvegarder et restaurer votre profil utilisateur (bureau, documents, navigateurs, Outlook, et plus) sur un périphérique externe</h4>
+<h4 align="center"><a href="https://github.com/SULFURA/WinBackup/releases/latest" target="_blank">WinBackup</a> est un script Windows gratuit et open source qui permet de sauvegarder et de restaurer votre profil utilisateur (bureau, documents, navigateurs, Outlook, etc.) puis de restaurer sur un PC X ou Y.</h4>
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -58,7 +58,7 @@ Lors d'une restauration, le script lit automatiquement les métadonnées du doss
 
 ## Téléchargement
 
-Vous pouvez [télécharger](https://github.com/SULFURA/WinBackup/releases/latest) la dernière version
+Vous pouvez télécharger la dernière version [ICI](https://github.com/SULFURA/WinBackup/releases/latest)
 
 ## Licence
 
