@@ -26,7 +26,7 @@ if not "%errorlevel%"=="0" (
 )
 
 :: Check Updates
-set "local=1.0"
+set "local=1.1"
 set "localtwo=%local%"
 if exist "%temp%\WinBackup_Updater.bat" del /F /Q "%temp%\WinBackup_Updater.bat" >nul 2>&1
 curl -g -L -# -o "%temp%\WinBackup_Updater.bat" "https://raw.githubusercontent.com/SULFURA/WinBackup/main/files/WinBackup_Version" >nul 2>&1
@@ -61,7 +61,7 @@ set "ROBO_OPT=/E /ZB /R:2 /W:2 /XJ /COPY:DAT /DCOPY:DAT /FFT"
 set "EXCLUDE_PROFILES=All Users Default Default User Public defaultuser0 default"
 
 :: Étapes
-set "NB_ETAPES=13"
+set "NB_ETAPES=14"
 
 set "ETAPE_NOM[1]=Bureau"
 set "ETAPE_CLE[1]=DESKTOP"
@@ -101,6 +101,9 @@ set "ETAPE_CLE[12]=NOTES_PST"
 
 set "ETAPE_NOM[13]=Applications installées (export de la liste)"
 set "ETAPE_CLE[13]=APPLICATIONS"
+
+set "ETAPE_NOM[14]=Fond d'écran"
+set "ETAPE_CLE[14]=WALLPAPER"
 
 :: Menu
 :MENU
@@ -472,6 +475,16 @@ if "%ETAPE_OK%"=="1" (
     )
 )
 
+call :EST_COCHE WALLPAPER
+if "%ETAPE_OK%"=="1" (
+    call :AFFICHER_PROGRESSION "Sauvegarde du fond d'écran"
+    md "%DOSSIER_SAUVEGARDE%\Fond_ecran" 2>nul
+    if exist "%SRC_PROFILE%\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper" (
+        copy /Y "%SRC_PROFILE%\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper" "%DOSSIER_SAUVEGARDE%\Fond_ecran\" >nul
+    )
+    call :COPIER_DOSSIER "%SRC_PROFILE%\AppData\Roaming\Microsoft\Windows\Themes\CachedFiles" "%DOSSIER_SAUVEGARDE%\Fond_ecran\CachedFiles"
+)
+
 call :AFFICHER_PROGRESSION "Finalisation"
 echo Sauvegarde terminée >> "%FICHIER_LOG%"
 exit /b 0
@@ -679,6 +692,19 @@ if "%ETAPE_OK%"=="1" (
     )
 )
 
+call :EST_COCHE WALLPAPER
+if "%ETAPE_OK%"=="1" (
+    call :AFFICHER_PROGRESSION "Restauration du fond d'écran"
+    md "%DST%\AppData\Roaming\Microsoft\Windows\Themes" 2>nul
+    if exist "%SRC%\Fond_ecran\TranscodedWallpaper" (
+        copy /Y "%SRC%\Fond_ecran\TranscodedWallpaper" "%DST%\AppData\Roaming\Microsoft\Windows\Themes\" >nul
+    )
+    call :COPIER_DOSSIER "%SRC%\Fond_ecran\CachedFiles" "%DST%\AppData\Roaming\Microsoft\Windows\Themes\CachedFiles"
+    set "_WALL_FILE=%DST%\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper"
+    powershell -NoProfile -Command "if(Test-Path $env:_WALL_FILE){Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public class W{[DllImport(\"user32.dll\")]public static extern bool SystemParametersInfo(uint a,uint b,string s,uint c);}';[W]::SystemParametersInfo(20,0,$env:_WALL_FILE,3)|Out-Null}" 2>nul
+    call :FORCER_POLICE
+)
+
 call :AFFICHER_PROGRESSION "Finalisation"
 echo Restauration terminée >> "%FICHIER_LOG%"
 exit /b 0
@@ -732,7 +758,8 @@ set "DST_DIR=%~2"
 if exist "%SRC_DIR%" (
     echo [COPIE] "%SRC_DIR%" >> "%FICHIER_LOG%"
     if not exist "%DST_DIR%" md "%DST_DIR%" 2>nul
-    robocopy "%SRC_DIR%" "%DST_DIR%" * %ROBO_OPT% /LOG+:"%FICHIER_LOG%" >nul
+    set "_ROBO_LOG=%FICHIER_LOG%"
+    powershell -NoProfile -Command "$s=$env:SRC_DIR; $d=$env:DST_DIR; $l=$env:_ROBO_LOG; $cb=0; & robocopy $s $d '*' /E /ZB /R:2 /W:2 /XJ /COPY:DAT /DCOPY:DAT /FFT /BYTES /NJH /NJS /NP 2>$null | ForEach-Object { Out-File -LiteralPath $l -Append -Encoding UTF8 -InputObject $_ -EA 0; if($_ -match '\t\s*(\d+)\t'){$cb+=[long]$Matches[1]; Write-Host (\"`r  Copié : {0:N3} Go  \" -f ($cb/1GB)) -NoNewline} }; Write-Host ''"
 ) else (
     echo [ABSENT] "%SRC_DIR%" >> "%FICHIER_LOG%"
 )

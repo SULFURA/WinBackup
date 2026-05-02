@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center"><a href="https://github.com/SULFURA/WinBackup/releases/latest" target="_blank">WinBackup</a> is a free and open source Windows script that aims to backup and restore your user profile (desktop, documents, browsers, Outlook, and more) to an external device </h4>
+<h4 align="center"><a href="https://github.com/SULFURA/WinBackup/releases/latest" target="_blank">WinBackup</a> est un script Windows gratuit et open source pour sauvegarder et restaurer votre profil utilisateur (bureau, documents, navigateurs, Outlook, et plus) sur un périphérique externe</h4>
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -16,47 +16,51 @@
 [![GNU AGPLv3 License][license-shield]][license-url]
 
 <p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
-  <a href="#license">License</a>
+  <a href="#fonctionnalités">Fonctionnalités</a> •
+  <a href="#utilisation">Utilisation</a> •
+  <a href="#téléchargement">Téléchargement</a> •
+  <a href="#licence">Licence</a>
 </p>
 
-## Key Features
+## Fonctionnalités
 
-* Backup and restore your Windows user profile in a few clicks
-* Pick exactly what you want to save or restore from a checkbox menu (or select everything at once)
-* Backup your Desktop, Documents, Downloads, Pictures, Music, Videos, Contacts, Links and Favorites
-* Backup all your known browsers data : Edge, Firefox, Chrome, Chromium, Brave, Vivaldi, Opera, Opera GX, Yandex, Tor Browser and Internet Explorer
-* Backup your Outlook data (signatures, templates, mail data, RoamCache)
-* Backup your OneNote notebooks, Sticky Notes and every PST file found in your profile
-* Built-in safety check that prevents you from saving the backup inside the profile you are saving (avoids infinite loop)
-* Dynamic step counter and progress percentage that adapts to the steps you actually picked
-* Detailed log file generated for every backup and restore operation
-* Compatible with multi-user computers : pick which Windows profile you want to backup or restore
+* Sauvegardez et restaurez votre profil utilisateur Windows en quelques clics
+* Choisissez exactement ce que vous voulez sauvegarder ou restaurer via un menu de cases à cocher (ou tout sélectionner d'un coup)
+* Sauvegarde du Bureau, Documents, Téléchargements, Images, Musique, Vidéos, Contacts, Liens et Favoris
+* Sauvegarde complète des données de tous les navigateurs courants : Edge, Firefox, Chrome, Chromium, Brave, Vivaldi, Opera, Opera GX, Yandex, Tor Browser et Internet Explorer (profils, extensions, paramètres, favoris, historique)
+* Sauvegarde des données Outlook (signatures, modèles, données de messagerie, RoamCache)
+* Sauvegarde des blocs-notes OneNote, Pense-bêtes et de tous les fichiers PST trouvés dans le profil
+* Sauvegarde du fond d'écran avec réapplication automatique à la restauration
+* Export de la liste des applications installées (via winget ou le registre) pour faciliter la réinstallation
+* Garde-fou intégré empêchant de sauvegarder à l'intérieur du profil en cours de sauvegarde (évite les boucles infinies)
+* Compteur d'étapes dynamique et pourcentage d'avancement adaptés aux étapes réellement sélectionnées
+* Affichage en temps réel des Mo copiés pendant chaque opération de copie
+* Fichier de log détaillé généré pour chaque sauvegarde et restauration
+* Compatible avec les ordinateurs multi-utilisateurs : choisissez quel profil Windows sauvegarder ou restaurer
 
-## How To Use
+## Utilisation
 
-To use this script, download it <a href="https://github.com/SULFURA/WinBackup/releases/latest" target="_blank">HERE</a> and run it as administrator (the script will ask for elevation by itself if needed).
+Pour utiliser ce script, téléchargez-le <a href="https://github.com/SULFURA/WinBackup/releases/latest" target="_blank">ICI</a> et lancez-le en tant qu'administrateur (le script demandera lui-même l'élévation si nécessaire).
 
-Before launching a backup, plug in an external device (USB key or external hard drive, ideally encrypted with BitLocker). The backup must NEVER be saved inside the profile you are saving (especially not on the Desktop, Documents or Downloads of the same user) or it would create an infinite loop that fills up your disk.
+Avant de lancer une sauvegarde, branchez un périphérique externe (clé USB ou disque dur externe, idéalement chiffré avec BitLocker). La sauvegarde ne doit JAMAIS être enregistrée dans le profil que vous êtes en train de sauvegarder (en particulier pas sur le Bureau, les Documents ou les Téléchargements du même utilisateur) sous peine de créer une boucle infinie qui saturerait votre disque.
 
-Once launched : 
-* Select option 1 for Backup or option 2 for Restore
-* Pick the Windows profile you want to work on
-* Tick the steps you want with their number, type T to tick everything, R to untick everything, V to validate
-* Choose the destination folder (for backup) or the backup folder to restore from
-* Close every application, every window and every background program before letting the script run, including in the system tray (the small up arrow next to the clock)
+Une fois lancé :
+* Sélectionnez l'option 1 pour Sauvegarder ou l'option 2 pour Restaurer
+* Choisissez le profil Windows sur lequel travailler
+* Cochez les étapes souhaitées avec leur numéro, tapez T pour tout cocher, R pour tout décocher, V pour valider
+* Choisissez le dossier de destination (pour la sauvegarde) ou le dossier de sauvegarde à restaurer
 
-You can let the script run by itself, a progress screen will tell you which step is in progress and how far it is. Once finished, a confirmation window will tell you everything is done.
+Fermez toutes les applications, toutes les fenêtres et tous les programmes en arrière-plan avant de lancer le script, y compris dans la zone de notification (la petite flèche vers le haut à côté de l'horloge).
 
-For a restore, the script automatically reads the metadata of the backup folder and warns you if the source profile and the target profile are different.
+Vous pouvez laisser le script s'exécuter seul : un écran de progression indique quelle étape est en cours, son avancement, ainsi que les Mo copiés en temps réel. Une fenêtre de confirmation vous avertit une fois la tâche terminée.
 
-## Download
+Lors d'une restauration, le script lit automatiquement les métadonnées du dossier de sauvegarde et vous avertit si le profil source et le profil cible sont différents.
 
-You can [download](https://github.com/SULFURA/WinBackup/releases/latest) the latest version
+## Téléchargement
 
-## License
+Vous pouvez [télécharger](https://github.com/SULFURA/WinBackup/releases/latest) la dernière version
+
+## Licence
 
 GNU Affero General Public License v3.0
 
