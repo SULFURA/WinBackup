@@ -26,7 +26,7 @@ if not "%errorlevel%"=="0" (
 )
 
 :: Check Updates
-set "local=1.1"
+set "local=1.1.1"
 set "localtwo=%local%"
 if exist "%temp%\WinBackup_Updater.bat" del /F /Q "%temp%\WinBackup_Updater.bat" >nul 2>&1
 curl -g -L -# -o "%temp%\WinBackup_Updater.bat" "https://raw.githubusercontent.com/SULFURA/WinBackup/main/files/WinBackup_Version" >nul 2>&1
@@ -778,8 +778,13 @@ set "REL_DIR=%REL_DIR:~1,-1%"
 set "DEST_DIR=%PSTROOT%\%REL_DIR%"
 if not exist "%DEST_DIR%" md "%DEST_DIR%" 2>nul
 
+:: %~dp1 retourne toujours un antislash final (ex: C:\path\)
+:: CommandLineToArgvW interprète \" comme un guillemet échappé, ce qui brise les arguments de robocopy
+:: => on passe une copie sans l'antislash final uniquement pour robocopy
+set "FILEDIR_SAFE=%FILEDIR:~0,-1%"
+
 echo [PST] "%FULLFILE%" >> "%FICHIER_LOG%"
-robocopy "%FILEDIR%" "%DEST_DIR%" "%FILENAME%" /ZB /R:2 /W:2 /COPY:DAT /LOG+:"%FICHIER_LOG%" >nul
+robocopy "%FILEDIR_SAFE%" "%DEST_DIR%" "%FILENAME%" /ZB /R:2 /W:2 /COPY:DAT /LOG+:"%FICHIER_LOG%" >nul
 exit /b 0
 
 :: Force la police de la console à Consolas pour éviter qu'elle change après PowerShell
